@@ -23,29 +23,19 @@ def run_evaluation(input_dir, output_dir, weights_path):
         arr = np.load(file_path).astype(np.float32)
 
         # Normalize to [0, 1] if required
-        max_val = arr.max()
-        if max_val > 1.0:
-            arr_norm = arr / 255.0
-        else:
-            arr_norm = arr
-
-        tensor_in = torch.from_numpy(arr_norm).unsqueeze(0).unsqueeze(0).to(device)
+        tensor_in = torch.from_numpy(arr).unsqueeze(0).unsqueeze(0).to(device)
 
         with torch.no_grad():
             output_tensor = model(tensor_in)
 
         # Convert back to NumPy array
+        # Convert back to NumPy array
         output_arr = output_tensor.squeeze().cpu().numpy()
         output_arr = np.clip(output_arr, 0.0, 1.0)
-        
-        if max_val > 1.0:
-            output_arr_scaled = (output_arr * 255.0).astype(np.uint8)
-        else:
-            output_arr_scaled = output_arr
 
         # Save output as .npy file
         npy_save_path = os.path.join(output_dir, fname)
-        np.save(npy_save_path, output_arr_scaled)
+        np.save(npy_save_path, output_arr)
 
         # Save visual comparison as .png
         png_save_path = os.path.join(output_dir, fname.replace(".npy", ".png"))

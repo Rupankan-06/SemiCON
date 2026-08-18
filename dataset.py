@@ -25,11 +25,6 @@ class PairedNpyDataset(Dataset):
         # Convert to Tensor (C, H, W)
         lr_tensor = torch.from_numpy(lr_array).unsqueeze(0) if lr_array.ndim == 2 else torch.from_numpy(lr_array)
         gt_tensor = torch.from_numpy(gt_array).unsqueeze(0) if gt_array.ndim == 2 else torch.from_numpy(gt_array)
-        if lr_tensor.max() > 1.0:
-            lr_tensor = lr_tensor / 255.0
-        if gt_tensor.max() > 1.0:
-            gt_tensor = gt_tensor / 255.0
-
         # Augmentations (Rotation & Flips)
         if self.augment:
             if random.random() > 0.5:

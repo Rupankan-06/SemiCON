@@ -83,6 +83,8 @@ class NAFNetRCANPipeline(nn.Module):
         self.upscaler = nn.Sequential(
             nn.Conv2d(num_features, num_features * (scale_factor ** 2), 3, padding=1),
             nn.PixelShuffle(scale_factor),
+            NAFBlock(num_features),
+            NAFBlock(num_features),
             nn.Conv2d(num_features, in_channels, 3, padding=1)
         )
 
